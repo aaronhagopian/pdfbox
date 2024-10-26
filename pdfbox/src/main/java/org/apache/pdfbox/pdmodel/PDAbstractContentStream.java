@@ -31,6 +31,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.pdfbox.contentstream.operator.OperatorName;
 import org.apache.pdfbox.cos.COSArray;
 import org.apache.pdfbox.cos.COSBase;
+import org.apache.pdfbox.cos.COSDictionary;
 import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.cos.COSNumber;
 import org.apache.pdfbox.pdfwriter.COSWriter;
@@ -1361,7 +1362,18 @@ abstract class PDAbstractContentStream implements Closeable
     public void beginMarkedContent(COSName tag, PDPropertyList propertyList) throws IOException
     {
         writeOperand(tag);
-        writeOperand(resources.add(propertyList));
+
+        COSDictionary dict = propertyList.getCOSObject();
+        if (dict.getInt(COSName.MCID) > -1 && dict.size() == 1)
+        {
+            // PDFBOX-5890: use simplified notation if there's only an MCID
+            write("<</MCID " + dict.getInt(COSName.MCID) + ">> ");
+        }
+        else
+        {
+            writeOperand(resources.add(propertyList));
+        }
+
         writeOperator(OperatorName.BEGIN_MARKED_CONTENT_SEQ);
     }
 
