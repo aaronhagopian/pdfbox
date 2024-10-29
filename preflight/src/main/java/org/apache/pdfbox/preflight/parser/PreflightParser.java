@@ -40,6 +40,7 @@ import org.apache.pdfbox.cos.COSObject;
 import org.apache.pdfbox.cos.COSObjectKey;
 import org.apache.pdfbox.cos.COSStream;
 import org.apache.pdfbox.cos.COSString;
+import org.apache.pdfbox.io.RandomAccessRead;
 import org.apache.pdfbox.io.RandomAccessReadBufferedFile;
 import org.apache.pdfbox.pdfparser.PDFParser;
 import org.apache.pdfbox.pdfparser.XrefTrailerResolver.XRefType;
@@ -100,6 +101,17 @@ public class PreflightParser extends PDFParser
     public PreflightParser(File file) throws IOException
     {
         super(new RandomAccessReadBufferedFile(file));
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param rar input source
+     * @throws IOException if there is a reading error.
+     */
+    public PreflightParser(RandomAccessRead rar) throws IOException
+    {
+        super(rar);
     }
 
     /**
