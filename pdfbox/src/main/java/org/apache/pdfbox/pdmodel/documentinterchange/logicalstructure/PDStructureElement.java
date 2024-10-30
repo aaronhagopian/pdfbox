@@ -43,8 +43,9 @@ public class PDStructureElement extends PDStructureNode
     /**
      * Constructor with required values.
      *
-     * @param structureType the structure type
-     * @param parent the parent structure node
+     * @param structureType The structure type. Constants are available in the
+     * {@link StandardStructureTypes} class.
+     * @param parent The parent structure node.
      */
     public PDStructureElement(String structureType, PDStructureNode parent)
     {
