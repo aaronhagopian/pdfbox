@@ -63,6 +63,7 @@ public final class ExtractText
     private static final String IGNORE_BEADS = "-ignoreBeads";
     private static final String DEBUG = "-debug";
     private static final String HTML = "-html";
+    private static final String MD = "-md";
     private static final String ALWAYSNEXT = "-alwaysNext";
     private static final String ROTATION_MAGIC = "-rotationMagic";
     private static final String STD_ENCODING = "UTF-8";
@@ -105,6 +106,7 @@ public final class ExtractText
     {
         boolean toConsole = false;
         boolean toHTML = false;
+        boolean toMD = false;
         boolean sort = false;
         boolean separateBeads = true;
         boolean alwaysNext = false;
@@ -151,6 +153,11 @@ public final class ExtractText
             {
                 toHTML = true;
                 ext = ".html";
+            }
+            else if( args[i].equals( MD ) )
+            {
+                toMD = true;
+                ext = ".md";
             }
             else if( args[i].equals( SORT ) )
             {
@@ -243,6 +250,12 @@ public final class ExtractText
                     System.err.println("Writing to " + outputFile);
                 }
 
+                if (toHTML && toMD)
+                {
+                    System.err.println("You can't set md and html at the same time");
+                    System.exit(1);
+                }        
+
                 PDFTextStripper stripper;
                 if(toHTML)
                 {
@@ -258,13 +271,27 @@ public final class ExtractText
                 }
                 else
                 {
-                    if (rotationMagic)
+                    if (toMD)
                     {
-                        stripper = new FilteredTextStripper();
+                        if (rotationMagic)
+                        {
+                            stripper = new FilteredText2Markdown();
+                        }
+                        else
+                        {
+                            stripper = new PDFText2Markdown();
+                        }
                     }
                     else
                     {
-                        stripper = new PDFTextStripper();
+                        if (rotationMagic)
+                        {
+                            stripper = new FilteredTextStripper();
+                        }
+                        else
+                        {
+                            stripper = new PDFTextStripper();
+                        }
                     }
                     stripper.setSortByPosition(sort);
                     stripper.setShouldSeparateByBeads(separateBeads);
@@ -425,6 +452,7 @@ public final class ExtractText
             + "                                UTF-16LE, etc.\n"
             + "  -console                    : Send text to console instead of file\n"
             + "  -html                       : Output in HTML format instead of raw text\n"
+            + "  -md                         : Output in Markdown format instead of raw text\n"
             + "  -sort                       : Sort the text before writing\n"
             + "  -ignoreBeads                : Disables the separation by beads\n"
             + "  -debug                      : Enables debug output about the time consumption\n"
@@ -477,10 +505,30 @@ class AngleCollector extends PDFTextStripper
  */
 class FilteredTextStripper extends PDFTextStripper
 {
-    FilteredTextStripper() throws IOException
+    public FilteredTextStripper() throws IOException
     {
     }
 
+    @Override
+    protected void processTextPosition(TextPosition text)
+    {
+        int angle = ExtractText.getAngle(text);
+        if (angle == 0)
+        {
+            super.processTextPosition(text);
+        }
+    }
+}
+
+/**
+ * PDFText2Markdown that only processes glyphs that have angle 0.
+ */
+class FilteredText2Markdown extends PDFText2Markdown
+{
+    public FilteredText2Markdown() throws IOException
+    {
+    }
+    
     @Override
     protected void processTextPosition(TextPosition text)
     {
