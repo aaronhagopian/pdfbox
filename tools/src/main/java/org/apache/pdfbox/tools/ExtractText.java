@@ -505,7 +505,7 @@ class AngleCollector extends PDFTextStripper
  */
 class FilteredTextStripper extends PDFTextStripper
 {
-    public FilteredTextStripper() throws IOException
+    FilteredTextStripper() throws IOException
     {
     }
 
@@ -525,7 +525,7 @@ class FilteredTextStripper extends PDFTextStripper
  */
 class FilteredText2Markdown extends PDFText2Markdown
 {
-    public FilteredText2Markdown() throws IOException
+    FilteredText2Markdown() throws IOException
     {
     }
     
