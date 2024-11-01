@@ -17,6 +17,8 @@
 
 package org.apache.pdfbox.pdmodel.interactive.form;
 
+import java.util.HashSet;
+import java.util.Set;
 import org.apache.pdfbox.cos.COSArray;
 import org.apache.pdfbox.cos.COSBase;
 import org.apache.pdfbox.cos.COSDictionary;
@@ -67,7 +69,7 @@ public final class PDFieldFactory
             }
         } 
 
-        String fieldType = findFieldType(field);
+        String fieldType = findFieldType(field, new HashSet<COSDictionary>());
 
         if (FIELD_TYPE_CHOICE.equals(fieldType))
         {
@@ -127,17 +129,23 @@ public final class PDFieldFactory
         }
     }
 
-    private static String findFieldType(COSDictionary dic)
+    private static String findFieldType(COSDictionary dic, Set<COSDictionary> seen)
     {
+        if (!seen.add(dic))
+        {
+            // PDFBOX-5896: avoid endless recursion
+            return null;
+        }
         String retval = dic.getNameAsString(COSName.FT);
         if (retval == null)
         {
             COSBase base = dic.getDictionaryObject(COSName.PARENT, COSName.P);
             if (base instanceof COSDictionary)
             {
-                retval = findFieldType((COSDictionary) base);
+                retval = findFieldType((COSDictionary) base, seen);
             }
         }
+        seen.remove(dic);
         return retval;
     }
 }
