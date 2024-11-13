@@ -25,6 +25,7 @@ import org.apache.pdfbox.cos.COSBase;
 import org.apache.pdfbox.cos.COSDictionary;
 import org.apache.pdfbox.cos.COSDocument;
 import org.apache.pdfbox.cos.COSName;
+import org.apache.pdfbox.cos.COSStream;
 import org.apache.pdfbox.pdmodel.graphics.form.PDFormXObject;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotation;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationWidget;
@@ -229,9 +230,16 @@ public abstract class AnnotationValidator
                     for (COSBase val : apnDict.getValues())
                     {
                         // Appearance stream is a XObjectForm, check it.
-                        ContextHelper.validateElement(ctx, new PDFormXObject(
-                                COSUtils.getAsStream(val, cosDocument)),
-                                GRAPHIC_PROCESS);
+                        COSStream strm = COSUtils.getAsStream(val, cosDocument);
+                        if (!(strm instanceof COSStream))
+                        {
+                            // PDFBOX-5900
+                            ctx.addValidationError(new ValidationError(ERROR_ANNOT_INVALID_AP_CONTENT,
+                            "The N Appearance of a Btn widget must be a stream"));
+                            return false;
+                        }
+                        ContextHelper.validateElement(ctx, new PDFormXObject(strm),
+                            GRAPHIC_PROCESS);
                     }
                 }
                 else
