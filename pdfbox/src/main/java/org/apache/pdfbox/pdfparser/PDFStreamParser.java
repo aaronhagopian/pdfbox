@@ -222,7 +222,14 @@ public class PDFStreamParser extends BaseParser
                         dotNotRead = false;
                     }
                 }
-                return COSNumber.get(buf.toString());
+                String s = buf.toString();
+                if ("+".equals(s))
+                {
+                    // PDFBOX-5906
+                    LOG.warn("isolated '+' is ignored");
+                    return COSNull.NULL;
+                }
+                return COSNumber.get(s);
             case 'B':
                 String nextOperator = readString();
                 Operator beginImageOP = Operator.getOperator(nextOperator);
