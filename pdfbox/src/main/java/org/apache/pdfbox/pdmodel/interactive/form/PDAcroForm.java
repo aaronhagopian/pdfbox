@@ -776,6 +776,13 @@ public final class PDAcroForm implements COSObjectable
         return transformedAppearanceBox.getBounds2D();
     }
 
+    /**
+     * Build a map of pages => widgets
+     * @param fields a list of fields to be flattened
+     * @param pages the page tree
+     * @return
+     * @throws IOException 
+     */
     private Map<COSDictionary,Set<COSDictionary>> buildPagesWidgetsMap(
             List<PDField> fields, PDPageTree pages) throws IOException
     {
@@ -795,6 +802,7 @@ public final class PDAcroForm implements COSObjectable
                 }
                 else
                 {
+                    LOG.warn("missing /P entry (page reference) in a widget for field: " + field);
                     hasMissingPageRef = true;
                 }
             }
@@ -808,11 +816,21 @@ public final class PDAcroForm implements COSObjectable
         // If there is a widget with a missing page reference we need to build the map reverse i.e. 
         // from the annotations to the widget.
         LOG.warn("There has been a widget with a missing page reference, will check all page annotations");
+        Set<COSDictionary> widgetDictionarySet = new HashSet<COSDictionary>();
+        for (PDField field : fields)
+        {
+            List<PDAnnotationWidget> widgets = field.getWidgets();
+            for (PDAnnotationWidget widget : widgets)
+            {
+                widgetDictionarySet.add(widget.getCOSObject());
+            }
+        }
+
         for (PDPage page : pages)
         {
             for (PDAnnotation annotation : page.getAnnotations())
             {
-                if (annotation instanceof PDAnnotationWidget)
+                if (widgetDictionarySet.contains(annotation.getCOSObject()))
                 {
                     fillPagesAnnotationMap(pagesAnnotationsMap, page, (PDAnnotationWidget) annotation);
                 }
