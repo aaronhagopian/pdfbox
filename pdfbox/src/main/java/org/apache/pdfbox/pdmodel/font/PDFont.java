@@ -146,7 +146,8 @@ public abstract class PDFont implements COSObjectable, PDFontLike
             {
                 String name = getName();
                 LOG.warn("Invalid ToUnicode CMap in font " + name);
-                if (name != null && (name.startsWith("Tahoma") || name.startsWith("Verdana")))
+                if (toUnicode instanceof COSStream && name != null &&
+                        (name.startsWith("Tahoma") || name.startsWith("Verdana")))
                 {
                     // PDFBOX-5384: workaround inspired by PDF.js 15719 and 11242
                     return null;
