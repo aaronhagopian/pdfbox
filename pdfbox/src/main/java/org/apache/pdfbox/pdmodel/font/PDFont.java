@@ -147,7 +147,13 @@ public abstract class PDFont implements COSObjectable, PDFontLike
             cmap = readCMap(toUnicode);
             if (cmap != null && !cmap.hasUnicodeMappings())
             {
-                LOG.warn("Invalid ToUnicode CMap in font " + getName());
+                String name = getName();
+                LOG.warn("Invalid ToUnicode CMap in font " + name);
+                if (name != null && (name.startsWith("Tahoma") || name.startsWith("Verdana")))
+                {
+                    // PDFBOX-5384: workaround inspired by PDF.js 15719 and 11242
+                    return null;
+                }
                 String cmapName = cmap.getName() != null ? cmap.getName() : "";
                 String ordering = cmap.getOrdering() != null ? cmap.getOrdering() : "";
                 COSBase encoding = dict.getDictionaryObject(COSName.ENCODING);
