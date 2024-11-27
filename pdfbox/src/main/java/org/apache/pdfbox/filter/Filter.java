@@ -272,8 +272,11 @@ public abstract class Filter
             length = length <= 0 ? RandomAccessReadBuffer.DEFAULT_CHUNK_SIZE_4KB : length;
             // we don't know the size of the decoded stream, just estimate a 4 times bigger size than the encoded stream
             // use the estimated stream size as chunk size, use the default chunk size as limit to avoid to big values
-            randomAccessWriteBuffer = new RandomAccessReadWriteBuffer(
-                    Math.min(length << 2, RandomAccessReadBuffer.DEFAULT_CHUNK_SIZE_4KB));
+            length <<= 2;
+            length = length <= 0 ? // PDFBOX-5908 avoid invalid values (again)
+                    RandomAccessReadBuffer.DEFAULT_CHUNK_SIZE_4KB :
+                    Math.min(length, RandomAccessReadBuffer.DEFAULT_CHUNK_SIZE_4KB);
+            randomAccessWriteBuffer = new RandomAccessReadWriteBuffer(length);
             output = new RandomAccessOutputStream(randomAccessWriteBuffer);
             try
             {
