@@ -254,9 +254,18 @@ public final class PDFPrintable implements Printable
             // rasterize to bitmap (optional)
             Graphics2D printerGraphics = null;
             BufferedImage image = null;
-            if (dpi > 0)
+            if (dpi > 0 || dpi == -1)
             {
-                float dpiScale = dpi / 72;
+                float dpiScale;
+                if (dpi == -1)
+                {
+                    dpiScale = (float) graphics2D.getTransform().getScaleX();
+                    LOG.debug("dpi set to " + Math.round(graphics2D.getTransform().getScaleX() * 72));
+                }
+                else
+                {
+                    dpiScale = dpi / 72;
+                }
                 image = new BufferedImage((int)(imageableWidth * dpiScale / scale),
                                           (int)(imageableHeight * dpiScale / scale),
                                           BufferedImage.TYPE_INT_ARGB);
