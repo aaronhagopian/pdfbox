@@ -211,14 +211,11 @@
                                       <version>3.6.3</version>
                                   </requireMavenVersion>
                                   <!--
-                                  not needed, compiler will fail anyway
-                                  <requireJavaVersion>
-                                      <version>[1.7,12)</version>
-                                      <message>Requires at least Java 7, and
-                                          Java versions higher than 11 cannot
-                                          build Java 6 bytecode</message>
-                                  </requireJavaVersion>
-                                                  -->
+                                  PDFBOX-5912: <requireJavaVersion> no longer needed,
+                                  compiler will fail anyway; we are using ${jdk.path} in
+                                  maven-compiler-plugin for 'javac' on jenkins
+                                  so the maven jdk version doesn't matter
+                                  -->
                                   <requireEnvironmentVariable>
                                       <variableName>JAVA_HOME</variableName>
                                       <message>The JAVA_HOME environment variable must be set!</message>
@@ -337,10 +334,9 @@
               <plugin>
                   <groupId>org.owasp</groupId>
                   <artifactId>dependency-check-maven</artifactId>
-                    <!-- can't update to 11, this needs jdk11 -->
+                  <!-- can't update to 11, this needs jdk11 -->
                   <version>10.0.4</version>
                   <configuration>
-                      <skip>true</skip>
                       <failBuildOnCVSS>0</failBuildOnCVSS>
                       <!-- https://github.com/jeremylong/DependencyCheck/issues/1574 -->
                       <skipSystemScope>true</skipSystemScope>
