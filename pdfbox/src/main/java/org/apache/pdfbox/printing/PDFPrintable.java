@@ -260,7 +260,10 @@ public final class PDFPrintable implements Printable
                 if (dpi == -1)
                 {
                     dpiScale = (float) graphics2D.getTransform().getScaleX();
-                    LOG.debug("dpi set to " + Math.round(graphics2D.getTransform().getScaleX() * 72));
+                    if (LOG.isDebugEnabled())
+                    {
+                        LOG.debug("dpi set to " + Math.round(graphics2D.getTransform().getScaleX() * 72));
+                    }
                 }
                 else
                 {
