@@ -1048,11 +1048,6 @@ public abstract class PDFStreamEngine
      */
     public void setLineDashPattern(COSArray array, int phase)
     {
-        if (phase < 0)
-        {
-            LOG.warn("Dash phase has negative value " + phase + ", set to 0");
-            phase = 0;
-        }
         PDLineDashPattern lineDash = new PDLineDashPattern(array, phase);
         getGraphicsState().setLineDashPattern(lineDash);
     }
