@@ -85,6 +85,7 @@ public class Type2CharStringParser
             }
             else if (b0 == HINTMASK || b0 == CNTRMASK)
             {
+                glyphData.vstemCount += countNumbers(glyphData.sequence) / 2;
                 int maskLength = getMaskLength(glyphData.hstemCount, glyphData.vstemCount);
                 // drop the following bytes representing the mask as long as we don't support HINTMASK and CNTRMASK
                 for (int i = 0; i < maskLength; i++)
