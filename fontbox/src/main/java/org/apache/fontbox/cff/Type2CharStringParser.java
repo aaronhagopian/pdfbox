@@ -30,12 +30,12 @@ import org.apache.fontbox.cff.CharStringCommand.Type2KeyWord;
 public class Type2CharStringParser
 {
     // 1-byte commands
-    private static final int CALLSUBR = CharStringCommand.Key.CALLSUBR.hashCode();
-    private static final int CALLGSUBR = CharStringCommand.Key.CALLGSUBR.hashCode();
+    private static final int CALLSUBR = CharStringCommand.Key.CALLSUBR.getHashValue();
+    private static final int CALLGSUBR = CharStringCommand.Key.CALLGSUBR.getHashValue();
 
     // not yet supported commands
-    private static final int HINTMASK = CharStringCommand.Key.HINTMASK.hashCode();
-    private static final int CNTRMASK = CharStringCommand.Key.CNTRMASK.hashCode();
+    private static final int HINTMASK = CharStringCommand.Key.HINTMASK.getHashValue();
+    private static final int CNTRMASK = CharStringCommand.Key.CNTRMASK.getHashValue();
 
     private final String fontName;
 

@@ -422,5 +422,10 @@ public class CharStringCommand
         {
             return BY_KEY.get((b0 << 4) + b1);
         }
+
+        int getHashValue()
+        {
+            return hashValue;
+        }
     }
 }
