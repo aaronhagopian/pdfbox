@@ -111,7 +111,7 @@ public final class PrintPDF implements Callable<Integer>
     @Option(names = "-border", description = "print with border.")    
     private boolean border;
 
-    @Option(names = "-dpi", description = "render into intermediate image with specific dpi and then print.")
+    @Option(names = "-dpi", description = "render into intermediate image with specific dpi and then print. Use \"-1\" for the dpi of the printer.")
     private int dpi;
 
     @Option(names = "-noCenter", description = "align top-left (default: center on page).")
