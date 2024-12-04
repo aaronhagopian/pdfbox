@@ -604,7 +604,6 @@ public class PDFDebugger extends JFrame implements Callable<Integer>, HyperlinkL
         fileMenu.add(printMenuItem);
 
         printDpiMenu = PrintDpiMenu.getInstance().getMenu();
-        printDpiMenu.setEnabled(false);
         fileMenu.add(printDpiMenu);
 
         if (!IS_MAC_OS)
@@ -1427,7 +1426,6 @@ public class PDFDebugger extends JFrame implements Callable<Integer>, HyperlinkL
         };
         document = documentOpener.parse();
         printMenuItem.setEnabled(true);
-        printDpiMenu.setEnabled(true);
         reopenMenuItem.setEnabled(true);
         saveAsMenuItem.setEnabled(true);
         
@@ -1476,7 +1474,6 @@ public class PDFDebugger extends JFrame implements Callable<Integer>, HyperlinkL
         };
         document = documentOpener.parse();
         printMenuItem.setEnabled(true);
-        printDpiMenu.setEnabled(true);
         reopenMenuItem.setEnabled(true);
         saveAsMenuItem.setEnabled(true);
 
