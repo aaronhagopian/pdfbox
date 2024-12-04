@@ -486,7 +486,6 @@ public class PDFDebugger extends JFrame
         fileMenu.add(printMenuItem);
 
         printDpiMenu = PrintDpiMenu.getInstance().getMenu();
-        printDpiMenu.setEnabled(false);
         fileMenu.add(printDpiMenu);
 
         if (!IS_MAC_OS)
@@ -589,7 +588,6 @@ public class PDFDebugger extends JFrame
         viewMenu.addSeparator();
 
         allowSubsampling = new JCheckBoxMenuItem("Allow subsampling");
-        allowSubsampling.setEnabled(false);
         viewMenu.add(allowSubsampling);
 
         viewMenu.addSeparator();
@@ -1472,7 +1470,6 @@ public class PDFDebugger extends JFrame
         };
         document = documentOpener.parse();
         printMenuItem.setEnabled(true);
-        printDpiMenu.setEnabled(true);
         reopenMenuItem.setEnabled(true);
         saveAsMenuItem.setEnabled(true);
         
@@ -1517,7 +1514,6 @@ public class PDFDebugger extends JFrame
         };
         document = documentOpener.parse();
         printMenuItem.setEnabled(true);
-        printDpiMenu.setEnabled(true);
         reopenMenuItem.setEnabled(true);
         saveAsMenuItem.setEnabled(true);
 

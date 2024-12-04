@@ -298,7 +298,6 @@ public class PagePane implements ActionListener, AncestorListener, MouseMotionLi
         renderDestinationMenu.addMenuListeners(this);
         renderDestinationMenu.setEnableMenu(true);
         
-        PDFDebugger.allowSubsampling.setEnabled(true);
         PDFDebugger.allowSubsampling.addActionListener(this);
 
         PDFDebugger.repairAcroFormMenuItem.setEnabled(true);
@@ -313,7 +312,6 @@ public class PagePane implements ActionListener, AncestorListener, MouseMotionLi
         imageTypeMenu.setEnableMenu(false);
         renderDestinationMenu.setEnableMenu(false);
 
-        PDFDebugger.allowSubsampling.setEnabled(false);
         PDFDebugger.allowSubsampling.removeActionListener(this);
 
         PDFDebugger.repairAcroFormMenuItem.setEnabled(false);
