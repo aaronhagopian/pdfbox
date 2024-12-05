@@ -17,13 +17,8 @@
 
 package org.apache.fontbox.util.autodetect;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.List;
-
-import org.apache.fontbox.util.Charsets;
 
 /**
  * FontFinder for native Windows platforms. This class is based on a class provided by Apache FOP. see
@@ -31,32 +26,6 @@ import org.apache.fontbox.util.Charsets;
  */
 public class WindowsFontDirFinder implements FontDirFinder
 {
-
-    /**
-     * Attempts to read windir environment variable on windows (disclaimer: This is a bit dirty but seems to work
-     * nicely).
-     */
-    private String getWinDir(String osName) throws IOException
-    {
-        Process process;
-        Runtime runtime = Runtime.getRuntime();
-        String cmd;
-        if (osName.startsWith("Windows 9"))
-        {
-            cmd = "command.com";
-        }
-        else
-        {
-            cmd = "cmd.exe";
-        }
-        String[] cmdArray = { cmd, "/c", "echo", "%windir%" };
-        process = runtime.exec(cmdArray);
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(
-                process.getInputStream(), Charsets.ISO_8859_1));
-        String winDir = bufferedReader.readLine();
-        bufferedReader.close();
-        return winDir;
-    }
 
     /**
      * {@inheritDoc}
@@ -81,11 +50,7 @@ public class WindowsFontDirFinder implements FontDirFinder
         {
             try
             {
-                windir = getWinDir(osName);
-            }
-            catch (IOException e)
-            {
-                // should continue if this fails
+                windir = System.getenv("windir");
             }
             catch (SecurityException e)
             {
