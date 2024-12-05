@@ -660,7 +660,7 @@ final class FileSystemFontProvider extends FontProvider
         if (!pending.isEmpty())
         {
             // re-build the entire cache if we encounter un-cached fonts (could be optimised)
-            LOG.info(pending.size() + " new fonts found, font cache will be re-built");
+            LOG.info(pending.size() + " new font files found, font cache will be re-built");
             return null;
         }
         
