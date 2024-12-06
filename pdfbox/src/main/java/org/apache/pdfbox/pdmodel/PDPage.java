@@ -447,7 +447,7 @@ public class PDPage implements COSObjectable, PDContentStream
     public PDRectangle getTrimBox()
     {
         COSArray trimBox = page.getCOSArray(COSName.TRIM_BOX);
-        return trimBox != null ? clipToMediaBox(new PDRectangle(trimBox)) : null;
+        return trimBox != null ? clipToMediaBox(new PDRectangle(trimBox)) : getCropBox();
     }
 
     /**
