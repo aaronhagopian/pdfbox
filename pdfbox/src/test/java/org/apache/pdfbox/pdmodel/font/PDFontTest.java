@@ -464,4 +464,40 @@ public class PDFontTest
         Assert.assertTrue(new Area(path1).equals(new Area(path2))); // assertEquals does not test equals()
         doc.close();
     }
+
+    /**
+     * Check space width.
+     *
+     * @throws IOException 
+     */
+    @Test
+    public void PDFBOX5920Type0() throws IOException
+    {
+        InputStream is = 
+                PDFontTest.class.getResourceAsStream("/org/apache/pdfbox/resources/ttf/LiberationSans-Regular.ttf");
+        PDDocument document = new PDDocument();
+        PDFont font = PDType0Font.load(document, is, false);
+        Assert.assertEquals(20064.0f, 
+                font.getStringWidth("The quick brown fox jumps over the lazy dog."), 0.001f);
+        Assert.assertEquals(278.0f, font.getSpaceWidth(), 0.001f);
+        document.close();
+    }
+
+    /**
+     * Check space width.
+     *
+     * @throws IOException 
+     */
+    @Test
+    public void PDFBOX5920TrueType() throws IOException
+    {
+        InputStream is = 
+                PDFontTest.class.getResourceAsStream("/org/apache/pdfbox/resources/ttf/LiberationSans-Regular.ttf");
+        PDDocument document = new PDDocument();
+        PDFont font = PDTrueTypeFont.load(document, is, WinAnsiEncoding.INSTANCE);
+        Assert.assertEquals(20064.0f, 
+                font.getStringWidth("The quick brown fox jumps over the lazy dog."), 0.001f);
+        Assert.assertEquals(278.0f, font.getSpaceWidth(), 0.001f);
+        document.close();
+    }
 }

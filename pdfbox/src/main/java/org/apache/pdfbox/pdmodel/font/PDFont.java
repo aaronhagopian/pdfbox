@@ -538,8 +538,8 @@ public abstract class PDFont implements COSObjectable, PDFontLike
     }
 
     /**
-     * Determines the width of the space character.
-     * 
+     * Determines the width of the space character. This is very important for text extraction.
+     *
      * @return the width of the space character
      */
     public float getSpaceWidth()
@@ -558,7 +558,25 @@ public abstract class PDFont implements COSObjectable, PDFontLike
                 }
                 else
                 {
-                    fontWidthOfSpace = getWidth(32);
+                    try
+                    {
+                        // PDFBOX-5920: try with encoding, which gets the correct code
+                        fontWidthOfSpace = getStringWidth(" ");
+                    }
+                    catch (UnsupportedOperationException ex)
+                    {
+                        // Happens if encoding isn't implemented
+                        LOG.debug(ex.getMessage(), ex);
+                    }
+                    catch (IllegalArgumentException ex)
+                    {
+                        // Happens if space is not available in the font
+                        LOG.debug(ex.getMessage(), ex);
+                    }
+                    if (fontWidthOfSpace <= 0)
+                    {
+                        fontWidthOfSpace = getWidth(32);
+                    }
                 }
                 
                 // try to get it from the font itself
@@ -575,8 +593,13 @@ public abstract class PDFont implements COSObjectable, PDFontLike
             }
             catch (Exception e)
             {
-                LOG.error("Can't determine the width of the space character, assuming 250", e);
+                LOG.error("Can't determine the width of the space character for font " +
+                        getName() + ", assuming 250", e);
                 fontWidthOfSpace = 250f;
+            }
+            if (LOG.isDebugEnabled())
+            {
+                LOG.debug("Space width for font " + getName() + " is " + fontWidthOfSpace);
             }
         }
         return fontWidthOfSpace;
