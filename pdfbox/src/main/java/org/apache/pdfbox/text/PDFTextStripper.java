@@ -735,18 +735,17 @@ public class PDFTextStripper extends LegacyPDFStreamEngine
      */
     private void removeContainedSpaces(List<TextPosition> textList)
     {
-        TextPosition position, previousPosition;
         Iterator<TextPosition> iterator = textList.iterator();
 
         if (!iterator.hasNext())
         {
             return;
         }
-        previousPosition = iterator.next();
+        TextPosition previousPosition = iterator.next();
 
         while (iterator.hasNext()) 
         {
-            position = iterator.next();
+            TextPosition position = iterator.next();
             if (" ".equals(position.getUnicode()) && previousPosition.completelyContains(position))
             {
                 iterator.remove();
