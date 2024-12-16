@@ -17,8 +17,8 @@
 
 package org.apache.fontbox.cmap;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.fontbox.util.Charsets;
 
@@ -28,8 +28,8 @@ import org.apache.fontbox.util.Charsets;
  */
 public class CMapStrings
 {
-    private static final Map<Integer, String> twoByteMappings = new HashMap<Integer, String>();
-    private static final Map<Integer, String> oneByteMappings = new HashMap<Integer, String>();
+    private static final List<String> twoByteMappings = new ArrayList<String>(256 * 256);
+    private static final List<String> oneByteMappings = new ArrayList<String>(256);
 
     static
     {
@@ -48,14 +48,13 @@ public class CMapStrings
             for (int j = 0; j < 256; j++)
             {
                 byte[] bytes = { (byte) i, (byte) j };
-                twoByteMappings.put(CMap.toInt(bytes, 2),
-                        new String(bytes, Charsets.UTF_16BE));
+                twoByteMappings.add(new String(bytes, Charsets.UTF_16BE));
             }
         }
         for (int i = 0; i < 256; i++)
         {
             byte[] bytes = { (byte) i };
-            oneByteMappings.put(i, new String(bytes, Charsets.ISO_8859_1));
+            oneByteMappings.add(new String(bytes, Charsets.ISO_8859_1));
         }
     }
 
