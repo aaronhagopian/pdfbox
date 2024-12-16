@@ -147,6 +147,7 @@ public class PDFTextStripper extends LegacyPDFStreamEngine
     private boolean shouldSeparateByBeads = true;
     private boolean sortByPosition = false;
     private boolean addMoreFormatting = false;
+    private boolean ignoreContentStreamSpaceGlyphs = false;
 
     private float indentThreshold = defaultIndentThreshold;
     private float dropThreshold = defaultDropThreshold;
@@ -524,11 +525,8 @@ public class PDFTextStripper extends LegacyPDFStreamEngine
                 {
                     IterativeMergeSort.sort(textList, comparator);
                 }
-                finally
-                {
-                    // PDFBOX-5487: Remove all space characters if contained within the adjacent letters
-                    removeContainedSpaces(textList);
-                }
+                // PDFBOX-5487: Remove all space characters if contained within the adjacent letters
+                removeContainedSpaces(textList);
             }
 
             startArticle();
@@ -555,6 +553,12 @@ public class PDFTextStripper extends LegacyPDFStreamEngine
                 TextPosition position = textIter.next();
                 PositionWrapper current = new PositionWrapper(position);
                 String characterValue = position.getUnicode();
+
+                // PDFBOX-3774: conditionally ignore spaces from the content stream
+                if (" ".equals(characterValue) && getIgnoreContentStreamSpaceGlyphs())
+                {
+                    continue;
+                }
 
                 // Resets the average character width when we see a change in font
                 // or a change in the font size
@@ -1271,6 +1275,32 @@ public class PDFTextStripper extends LegacyPDFStreamEngine
     public void setSortByPosition(boolean newSortByPosition)
     {
         sortByPosition = newSortByPosition;
+    }
+
+    /**
+     * Determines whether spaces in the content stream text rendering instructions will be ignored
+     * during text extraction.
+     *
+     * @return true is space glyphs in the content stream text rendering instructions will be
+     * ignored - default is false
+     */
+    public boolean getIgnoreContentStreamSpaceGlyphs()
+    {
+        return ignoreContentStreamSpaceGlyphs;
+    }
+
+    /**
+     * Instruct the algorithm to ignore any spaces in the text rendering instructions in the content
+     * stream, and instead rely purely on the algorithm to determine where word breaks are.
+     *
+     * This can improve text extraction results where the content stream is sorted by position and
+     * has text overlapping spaces, but could cause some word breaks to not be added to the output
+     *
+     * @param newIgnoreContentStreamSpaceGlyphs whether PDF Box should ignore context stream spaces
+     */
+    public void setIgnoreContentStreamSpaceGlyphs(boolean newIgnoreContentStreamSpaceGlyphs)
+    {
+        ignoreContentStreamSpaceGlyphs = newIgnoreContentStreamSpaceGlyphs;
     }
 
     /**
