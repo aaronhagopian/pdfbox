@@ -814,7 +814,11 @@ public class CMapParser
 
     private static String createStringFromBytes(byte[] bytes)
     {
-        return new String(bytes, bytes.length == 1 ? StandardCharsets.ISO_8859_1 : StandardCharsets.UTF_16BE);
+        if (bytes.length <= 2)
+        {
+            return CMapStrings.getMapping(bytes);
+        }
+        return new String(bytes, StandardCharsets.UTF_16BE);
     }
 
     /**
