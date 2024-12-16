@@ -48,9 +48,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.fontbox.util.BoundingBox;
 import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.TestPDPageTree;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDFontDescriptor;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.font.PDType3Font;
 import org.apache.pdfbox.pdmodel.interactive.documentnavigation.destination.PDPageDestination;
 import org.apache.pdfbox.pdmodel.interactive.documentnavigation.outline.PDDocumentOutline;
@@ -741,6 +744,51 @@ public class TestTextStripper extends TestCase
         assertTrue(text.startsWith("Pesticides"));
         assertTrue(text.endsWith("1 000 10 10"));
         assertEquals(1378, text.replaceAll("\r", "").length());
+        doc.close();
+    }
+
+    /**
+     * PDFBOX-3774: test the IgnoreContentStreamSpaceGlyphs option.
+     *
+     * @throws Exception 
+     */
+    public void testIgnoreContentStreamSpaceGlyphs() throws Exception
+    {
+        PDDocument doc = new PDDocument();
+        PDPage page = new PDPage();
+        PDPageContentStream cs = new PDPageContentStream(doc, page);
+
+        float fontHeight = 8;
+        float x = 50;
+        float y = page.getMediaBox().getHeight() - 50;
+        PDFont font = PDType1Font.HELVETICA;
+        cs.beginText();
+        cs.setFont(font, fontHeight);
+        cs.newLineAtOffset(x, y);
+        cs.showText("(                                      )");
+        cs.endText();
+
+        int indent = 6;
+        float overlapX = x + indent * font.getAverageFontWidth() / 1000f * fontHeight;
+        PDFont overlapFont = PDType1Font.TIMES_ROMAN;
+        cs.beginText();
+        cs.setFont(overlapFont, fontHeight * 2f);
+        cs.newLineAtOffset(overlapX, y);
+        cs.showText("overlap");
+        cs.endText();
+        cs.close();
+        doc.addPage(page);
+
+        PDFTextStripper localStripper = new PDFTextStripper();
+        localStripper.setLineSeparator("\n");
+        localStripper.setPageEnd("\n");
+        localStripper.setStartPage(1);
+        localStripper.setEndPage(1);
+        localStripper.setSortByPosition(true);
+
+        localStripper.setIgnoreContentStreamSpaceGlyphs(true);
+        String text = localStripper.getText(doc);
+        assertEquals("( overlap )\n", text);
         doc.close();
     }
 }
