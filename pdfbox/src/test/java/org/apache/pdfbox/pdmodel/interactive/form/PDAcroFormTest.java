@@ -50,11 +50,11 @@ import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationWidget;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAppearanceDictionary;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAppearanceEntry;
 import org.apache.pdfbox.rendering.TestPDFToImage;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
-import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Test for the PDAcroForm class.
@@ -122,7 +122,7 @@ class PDAcroFormTest
         if (!TestPDFToImage.doTestFile(file, IN_DIR.getAbsolutePath(), OUT_DIR.getAbsolutePath()))
         {
             // don't fail, rendering is different on different systems, result must be viewed manually
-            fail("Rendering of " + file + " failed or is not identical to expected rendering in " + IN_DIR + " directory");
+            System.err.println("Rendering of " + file + " failed or is not identical to expected rendering in " + IN_DIR + " directory");
         }
         
     }
@@ -156,7 +156,7 @@ class PDAcroFormTest
         if (!TestPDFToImage.doTestFile(file, IN_DIR.getAbsolutePath(), OUT_DIR.getAbsolutePath()))
         {
             // don't fail, rendering is different on different systems, result must be viewed manually
-            fail("Rendering of " + file + " failed or is not identical to expected rendering in " + IN_DIR + " directory");
+            System.err.println("Rendering of " + file + " failed or is not identical to expected rendering in " + IN_DIR + " directory");
         }
     }
     
