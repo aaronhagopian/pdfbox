@@ -56,7 +56,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
 
 /**
- * Test for the PDButton class.
+ * Test for the PDAcroForm class.
  *
  */
 class PDAcroFormTest
