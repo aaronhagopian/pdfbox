@@ -56,7 +56,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Test for the PDButton class.
+ * Test for the PDAcroForm class.
  *
  */
 public class PDAcroFormTest
