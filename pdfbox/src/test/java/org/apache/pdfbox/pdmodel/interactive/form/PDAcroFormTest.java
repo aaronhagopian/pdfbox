@@ -42,6 +42,7 @@ import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDResources;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDFont;
+import org.apache.pdfbox.pdmodel.font.PDType0Font;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.font.Standard14Fonts.FontName;
 import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotation;
@@ -406,6 +407,33 @@ class PDAcroFormTest
             }
             assertEquals("[Nynäshamn, Råcksta, Silverdal, Skogskrem, St Botvid, Storkällan]",
                     set.toString());
+        }
+    }
+
+    /***
+     * PDFBOX-5797: Check that Sejda generated files have their widget /DA entries changed. 
+     */
+    @Test
+    void testPDFBox5797() throws IOException
+    {
+        try (PDDocument doc = Loader.loadPDF(new File(
+                "src/test/resources/org/apache/pdfbox/pdmodel/interactive/annotation/PDFBOX-5797-SO79271803.pdf")))
+        {
+            PDType0Font load = PDType0Font.load(doc, 
+                    PDAcroFormFromAnnotsTest.class.getResourceAsStream("/org/apache/pdfbox/resources/ttf/LiberationSans-Regular.ttf"), 
+                    false);
+
+            PDAcroForm acroForm = doc.getDocumentCatalog().getAcroForm();
+            PDResources resources = acroForm.getDefaultResources();
+            String fontName = resources.add(load).getName();
+            String defaultAppearanceString = "/" + fontName + " 12 Tf 0 g";
+
+            PDTextField myField = (PDTextField) acroForm.getField("Name");
+            myField.setDefaultAppearance(defaultAppearanceString);
+            myField.getWidgets().get(0).setAppearance(null);
+            myField.setValue("ŞŞ"); // Text with the Ş character made it crash
+
+            assertEquals("ŞŞ", myField.getValue());
         }
     }
 
