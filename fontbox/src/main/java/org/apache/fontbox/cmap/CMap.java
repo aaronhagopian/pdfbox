@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -189,24 +190,6 @@ public class CMap
     }
 
     /**
-     * Convert the given part of a byte array to an integer.
-     * @param data the byte array
-     * @param offset The offset into the byte array.
-     * @param length The length of the data we are getting.
-     * @return the resulting integer
-     */
-    private int getCodeFromArray( byte[] data, int offset, int length )
-    {
-        int code = 0;
-        for( int i=0; i<length; i++ )
-        {
-            code <<= 8;
-            code |= (data[offset+i]+256)%256;
-        }
-        return code;
-    }
-
-    /**
      * This will add a character code to Unicode character sequence mapping.
      *
      * @param codes The character codes to map from.
@@ -214,14 +197,12 @@ public class CMap
      */
     void addCharMapping(byte[] codes, String unicode)
     {
-        unicodeToByteCodes.put(unicode, codes.clone()); // clone needed, bytes is modified later
-        int code = getCodeFromArray(codes, 0, codes.length);
-        charToUnicode.put(code, unicode);
-
+        unicodeToByteCodes.put(unicode, CMapStrings.getByteValue(codes));
+        charToUnicode.put(CMapStrings.getIndexValue(codes), unicode);
         // fixme: ugly little hack
         if (SPACE.equals(unicode))
         {
-            spaceMapping = code;
+            spaceMapping = toInt(codes, codes.length);
         }
     }
 

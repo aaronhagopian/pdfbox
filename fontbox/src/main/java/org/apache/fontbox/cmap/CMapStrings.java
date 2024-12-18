@@ -31,6 +31,10 @@ public class CMapStrings
     private static final List<String> twoByteMappings = new ArrayList<String>(256 * 256);
     private static final List<String> oneByteMappings = new ArrayList<String>(256);
 
+    private static final List<Integer> indexValues = new ArrayList<Integer>(256 * 256);
+    private static final List<byte[]> oneByteValues = new ArrayList<byte[]>(256);
+    private static final List<byte[]> twoByteValues = new ArrayList<byte[]>(256 * 256);
+
     static
     {
         // create all mappings when loading the class to avoid concurrency issues
@@ -49,12 +53,15 @@ public class CMapStrings
             {
                 byte[] bytes = { (byte) i, (byte) j };
                 twoByteMappings.add(new String(bytes, Charsets.UTF_16BE));
+                twoByteValues.add(bytes);
+                indexValues.add((i * 256) + j);
             }
         }
         for (int i = 0; i < 256; i++)
         {
             byte[] bytes = { (byte) i };
             oneByteMappings.add(new String(bytes, Charsets.ISO_8859_1));
+            oneByteValues.add(bytes);
         }
     }
 
@@ -73,5 +80,39 @@ public class CMapStrings
         }
         return bytes.length == 1 ? oneByteMappings.get(CMap.toInt(bytes, 1))
                 : twoByteMappings.get(CMap.toInt(bytes, 2));
+    }
+
+    /**
+     * Get an Integer instance of the given combination of bytes. Each value is a singleton to avoid multiple instances
+     * for same value. The values are limited to one and two-byte sequences. Any longer byte sequence produces null as
+     * return value.
+     * 
+     * @param bytes the given combination of bytes
+     * @return the Integer representation for the given combination of bytes
+     */
+    public static Integer getIndexValue(byte[] bytes)
+    {
+        if (bytes.length > 2)
+        {
+            return null;
+        }
+        return indexValues.get(CMap.toInt(bytes, bytes.length));
+    }
+
+    /**
+     * Get a singleton instance of the given combination of bytes to avoid multiple instances for same value. The values
+     * are limited to one and two-byte sequences. Any longer byte sequence produces null as return value.
+     * 
+     * @param bytes the given combination of bytes
+     * @return a singleton instance for the given combination of bytes
+     */
+    public static byte[] getByteValue(byte[] bytes)
+    {
+        if (bytes.length > 2)
+        {
+            return null;
+        }
+        return bytes.length == 1 ? oneByteValues.get(CMap.toInt(bytes, 1))
+                : twoByteValues.get(CMap.toInt(bytes, 2));
     }
 }
