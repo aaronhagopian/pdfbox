@@ -20,6 +20,7 @@ import java.awt.geom.GeneralPath;
 import java.awt.geom.PathIterator;
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -448,7 +449,10 @@ public class PDTextAppearanceHandler extends PDAbstractAppearanceHandler
         contentStream.setLineCapStyle(0);
         contentStream.setLineWidth(0.59f); // value from Adobe
 
-        contentStream.transform(Matrix.getScaleInstance(0.001f * min / 0.8f, 0.001f * min / 0.8f));
+        List<Number> fontMatrix = PDType1Font.ZAPF_DINGBATS.getFontBoxFont().getFontMatrix();
+        float xScale = (float) fontMatrix.get(0);
+        float yScale = (float) fontMatrix.get(3);
+        contentStream.transform(Matrix.getScaleInstance(xScale * min / 0.8f, yScale * min / 0.8f));
 
         // we get the shape of a Zapf Dingbats star (0x2605) and use that one.
         // Adobe uses a different font (which one?), or created the shape from scratch.
@@ -472,7 +476,10 @@ public class PDTextAppearanceHandler extends PDAbstractAppearanceHandler
         contentStream.setLineCapStyle(0);
         contentStream.setLineWidth(0.59f); // value from Adobe
 
-        contentStream.transform(Matrix.getScaleInstance(0.001f * min / 0.8f, 0.001f * min / 0.8f));
+        List<Number> fontMatrix = PDType1Font.ZAPF_DINGBATS.getFontBoxFont().getFontMatrix();
+        float xScale = (float) fontMatrix.get(0);
+        float yScale = (float) fontMatrix.get(3);
+        contentStream.transform(Matrix.getScaleInstance(xScale * min / 0.8f, yScale * min / 0.8f));
         contentStream.transform(Matrix.getTranslateInstance(0, 50));
 
         // we get the shape of a Zapf Dingbats check (0x2714) and use that one.
@@ -495,7 +502,10 @@ public class PDTextAppearanceHandler extends PDAbstractAppearanceHandler
         contentStream.setLineCapStyle(0);
         contentStream.setLineWidth(0.59f); // value from Adobe
 
-        contentStream.transform(Matrix.getScaleInstance(0.001f * min / 0.8f, 0.001f * min / 0.8f));
+        List<Number> fontMatrix = PDType1Font.ZAPF_DINGBATS.getFontBoxFont().getFontMatrix();
+        float xScale = (float) fontMatrix.get(0);
+        float yScale = (float) fontMatrix.get(3);
+        contentStream.transform(Matrix.getScaleInstance(xScale * min / 0.8f, yScale * min / 0.8f));
         contentStream.transform(Matrix.getTranslateInstance(0, 50));
 
         // we get the shape of a Zapf Dingbats right pointer (0x27A4) and use that one.
@@ -596,15 +606,14 @@ public class PDTextAppearanceHandler extends PDAbstractAppearanceHandler
         contentStream.restoreGraphicsState();
 
         contentStream.saveGraphicsState();
-        // rescale so that the glyph fits into circle and move it to circle center
-        // values gathered by trial and error
-        contentStream.transform(Matrix.getScaleInstance(0.001f * min / 1.3f, 0.001f * min / 1.3f));
-        contentStream.transform(Matrix.getTranslateInstance(200, 300));
-
-        // we get the shape of a Zapf Dingbats right arrow (0x2794) and use that one.
-        // Adobe uses a different font (which one?), or created the shape from scratch.
-        GeneralPath path = PDType1Font.ZAPF_DINGBATS.getPath("a160");
-        addPath(contentStream, path);
+        contentStream.moveTo(8, 17.5f);
+        contentStream.lineTo(8, 13.5f);
+        contentStream.lineTo(3, 13.5f);
+        contentStream.lineTo(3, 6.5f);
+        contentStream.lineTo(8, 6.5f);
+        contentStream.lineTo(8, 2.5f);
+        contentStream.lineTo(18, 10);
+        contentStream.closePath();
         contentStream.restoreGraphicsState();
         // surprisingly, this one not counterclockwise.
         drawCircle(contentStream, min / 2, min / 2, min / 2 - 1);
