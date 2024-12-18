@@ -450,8 +450,8 @@ public class PDTextAppearanceHandler extends PDAbstractAppearanceHandler
         contentStream.setLineWidth(0.59f); // value from Adobe
 
         List<Number> fontMatrix = PDType1Font.ZAPF_DINGBATS.getFontBoxFont().getFontMatrix();
-        float xScale = (float) fontMatrix.get(0);
-        float yScale = (float) fontMatrix.get(3);
+        float xScale = (Float) fontMatrix.get(0);
+        float yScale = (Float) fontMatrix.get(3);
         contentStream.transform(Matrix.getScaleInstance(xScale * min / 0.8f, yScale * min / 0.8f));
 
         // we get the shape of a Zapf Dingbats star (0x2605) and use that one.
@@ -477,8 +477,8 @@ public class PDTextAppearanceHandler extends PDAbstractAppearanceHandler
         contentStream.setLineWidth(0.59f); // value from Adobe
 
         List<Number> fontMatrix = PDType1Font.ZAPF_DINGBATS.getFontBoxFont().getFontMatrix();
-        float xScale = (float) fontMatrix.get(0);
-        float yScale = (float) fontMatrix.get(3);
+        float xScale = (Float) fontMatrix.get(0);
+        float yScale = (Float) fontMatrix.get(3);
         contentStream.transform(Matrix.getScaleInstance(xScale * min / 0.8f, yScale * min / 0.8f));
         contentStream.transform(Matrix.getTranslateInstance(0, 50));
 
@@ -503,8 +503,8 @@ public class PDTextAppearanceHandler extends PDAbstractAppearanceHandler
         contentStream.setLineWidth(0.59f); // value from Adobe
 
         List<Number> fontMatrix = PDType1Font.ZAPF_DINGBATS.getFontBoxFont().getFontMatrix();
-        float xScale = (float) fontMatrix.get(0);
-        float yScale = (float) fontMatrix.get(3);
+        float xScale = (Float) fontMatrix.get(0);
+        float yScale = (Float) fontMatrix.get(3);
         contentStream.transform(Matrix.getScaleInstance(xScale * min / 0.8f, yScale * min / 0.8f));
         contentStream.transform(Matrix.getTranslateInstance(0, 50));
 
