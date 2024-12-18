@@ -102,7 +102,7 @@ final class FontMapperImpl implements FontMapper
                 new ArrayList<String>(Arrays.asList("Symbol", "SymbolMT", "StandardSymL")));
         addSubstitutes("ZapfDingbats", new ArrayList<String>(
                 Arrays.asList("ZapfDingbatsITCbyBT-Regular", "ZapfDingbatsITC", "Dingbats", 
-                        "MS-Gothic")));
+                        "MS-Gothic", "DejaVuSans")));
 
         // Acrobat also uses alternative names for Standard 14 fonts, which we map to those above
         // these include names such as "Arial" and "TimesNewRoman"
