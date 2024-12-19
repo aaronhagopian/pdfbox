@@ -16,10 +16,7 @@
  */
 package org.apache.pdfbox.multipdf;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -43,6 +40,7 @@ import org.apache.pdfbox.cos.COSObject;
 import org.apache.pdfbox.cos.COSStream;
 import org.apache.pdfbox.io.IOUtils;
 import org.apache.pdfbox.io.RandomAccessRead;
+import org.apache.pdfbox.io.RandomAccessReadBuffer;
 import org.apache.pdfbox.io.RandomAccessStreamCache.StreamCacheCreateFunction;
 import org.apache.pdfbox.pdfwriter.compress.CompressParameters;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -305,6 +303,18 @@ public class PDFMergerUtility
     public void addSource(File source) throws FileNotFoundException
     {
         sources.add(source);
+    }
+
+    /**
+     * Add a source to the list of documents to merge.
+     *
+     * @param source InputStream representing source document
+     *
+     * @throws IOException If something went wrong while copying the data
+     */
+    public void addSource(InputStream source) throws IOException
+    {
+        sources.add(new RandomAccessReadBuffer(source));
     }
 
     /**
